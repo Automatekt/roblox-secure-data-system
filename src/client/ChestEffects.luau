@@ -101,11 +101,15 @@ end
 
 -- El cofre del servidor es solo una caja invisible; este es el aspecto que ve su dueño
 local function animateOwnChest(chest: Model)
-	chest:WaitForChild("Hitbox") -- el cofre llega completo antes de leer su posición
+	-- El cofre llega completo antes de leer su posición. Si desaparece antes, no hay nada que dibujar.
+	if chest:WaitForChild("Hitbox", 5) == nil or not chest:IsDescendantOf(game) then
+		return
+	end
 	local home = chest:GetPivot()
 
 	local visual = ChestVisual.build()
 	visual:ScaleTo(0.01)
+	local lastScale = 0.01
 	visual:PivotTo(home)
 	visual.Parent = visuals
 
@@ -218,23 +222,36 @@ local function animateOwnChest(chest: Model)
 		end
 
 		angle += dt * spinSpeed
-		visual:ScaleTo(math.max(scale, 0.01))
+		-- Reescalar cuesta (recalcula las 14 piezas): solo cuando la escala cambia de verdad
+		local targetScale = math.max(scale, 0.01)
+		if math.abs(targetScale - lastScale) > 0.0005 then
+			visual:ScaleTo(targetScale)
+			lastScale = targetScale
+		end
 		visual:PivotTo(home * CFrame.new(0, lift, 0) * CFrame.Angles(0, angle, 0))
 		fx.Position = home.Position + Vector3.new(0, lift, 0)
 	end)
 
-	-- Cuando el servidor borra el cofre, se limpia todo lo local (una sola vez)
+	-- Limpia todo lo local (una sola vez). La pieza de partículas queda 1 s más para
+	-- que el último "puf" termine de verse.
 	local ancestryConnection: RBXScriptConnection
-	ancestryConnection = chest.AncestryChanged:Connect(function()
-		if chest:IsDescendantOf(game) then
-			return
-		end
+	local function cleanup()
 		ancestryConnection:Disconnect()
 		frameConnection:Disconnect()
 		stateConnection:Disconnect()
 		visual:Destroy()
-		fx:Destroy()
+		light.Enabled = false
+		Debris:AddItem(fx, 1)
+	end
+	ancestryConnection = chest.AncestryChanged:Connect(function()
+		if not chest:IsDescendantOf(game) then
+			cleanup()
+		end
 	end)
+	-- Si el cofre ya había desaparecido mientras preparábamos todo
+	if not chest:IsDescendantOf(game) then
+		cleanup()
+	end
 end
 
 -- El prompt de un cofre ajeno no debe aparecerle a este jugador

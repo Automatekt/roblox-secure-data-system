@@ -22,8 +22,9 @@ local FIRST_SPAWN_DELAY = 1 -- espera tras cargar los datos, para que ya se vea 
 local RESPAWN_DELAY = 1.2 -- espera entre recoger un cofre y que aparezca el siguiente
 local MAX_CLAIM_DISTANCE = 14 -- el prompt llega a 10; el resto es margen por el movimiento
 local RECENT_LIMIT = 2 -- puntos recientes que no se repiten para el mismo jugador
+local NO_POINTS_RETRY = 5 -- segundos antes de reintentar si no hay ningún punto válido
 
-export type Result = "Ok" | "Ignored" | "TooFar" | "Cooldown" | CurrencyService.Result
+type Result = "Ok" | "Ignored" | "TooFar" | "Cooldown" | CurrencyService.Result
 
 type PlayerState = {
 	chest: Model?,
@@ -63,7 +64,8 @@ local function spawnChest(player: Player, state: PlayerState)
 	end
 	local point = ChestPoints.pickNext(state.point, avoid)
 	if point == nil then
-		warn("[ChestService] no hay puntos válidos para el cofre de " .. player.Name)
+		warn("[ChestService] no hay puntos válidos para el cofre de " .. player.Name .. "; se reintenta en 5 s")
+		task.delay(NO_POINTS_RETRY, spawnChest, player, state)
 		return
 	end
 
@@ -138,13 +140,6 @@ function claim(owner: Player, chest: Model): Result
 	end)
 	return "Ok"
 end
-
-function ChestService.getChest(player: Player): Model?
-	local state = states[player]
-	return state and state.chest
-end
-
-ChestService.claim = claim
 
 function ChestService.start()
 	local folder = Instance.new("Folder")

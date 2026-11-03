@@ -80,11 +80,6 @@ function ChestPoints.validate(): { Vector3 }
 	return result
 end
 
--- Puntos válidos (vacío hasta que termine validate)
-function ChestPoints.getAll(): { Vector3 }
-	return validPoints
-end
-
 local function containsPoint(list: { Vector3 }, point: Vector3): boolean
 	for _, other in list do
 		if (other - point).Magnitude < 0.5 then

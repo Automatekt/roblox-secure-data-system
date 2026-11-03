@@ -20,9 +20,7 @@
       }
     },
     "Workspace": {
-      "$properties": {
-        "FilteringEnabled": true
-      }
+      "$className": "Workspace"
     },
     "Lighting": {
       "$ignoreUnknownInstances": false,
@@ -99,9 +97,7 @@
       }
     },
     "SoundService": {
-      "$properties": {
-        "RespectFilteringEnabled": true
-      }
+      "$className": "SoundService"
     }
   }
 }

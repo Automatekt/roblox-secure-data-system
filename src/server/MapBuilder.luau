@@ -167,7 +167,8 @@ local function buildPillars(parent: Instance, rng: Random)
 
 		-- Los pilares rotos dejan un trozo de columna caído al lado
 		if not intact then
-			local fx, fz = polar(PILLAR_RADIUS + 3.5, angle + 0.25)
+			-- Bien pegado a su pilar: lejos de los puntos del cofre, que quedan entre pilares
+			local fx, fz = polar(PILLAR_RADIUS + 3.5, angle + 0.1)
 			local lying = CFrame.new(fx, PLAZA_TOP + 1.3, fz) * CFrame.Angles(0, rng:NextNumber(0, PI), 0)
 			local piece = newPart(parent, "FallenColumn", Vector3.new(4.5, 2.6, 2.6), lying, stoneColor(rng, 0.35), Enum.Material.Limestone, false)
 			piece.Shape = Enum.PartType.Cylinder
@@ -250,7 +251,8 @@ end
 local function buildVegetation(parent: Instance, rng: Random)
 	-- Un arbusto junto a cada pilar
 	for index = 0, 7 do
-		local x, z = polar(PILLAR_RADIUS + 2.6, index * PI / 4 - 0.35)
+		-- Al otro lado del tronco caído, pegado al pilar y lejos de los puntos del cofre
+		local x, z = polar(PILLAR_RADIUS + 2.6, index * PI / 4 - 0.1)
 		local size = rng:NextNumber(2.4, 3.6)
 		newBall(parent, "Bush", Vector3.new(x, PLAZA_TOP + size * 0.3, z), size, mossColor(rng), Enum.Material.Grass, false)
 	end
