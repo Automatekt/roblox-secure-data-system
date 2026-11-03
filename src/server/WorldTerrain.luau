@@ -54,22 +54,11 @@ local function buildMountains(terrain: Terrain, rng: Random)
 	end
 end
 
--- Busca un sitio libre (sin pisar plaza, camino ni ruinas) entre dos radios del centro
-local function findSpot(rng: Random, minRadius: number, maxRadius: number, footprint: number, margin: number): Vector3?
-	for _ = 1, 12 do
-		local x, z = MapParts.polar(rng:NextNumber(minRadius, maxRadius), rng:NextNumber(0, 2 * PI))
-		if WorldLayout.isFree(x, z, footprint, margin) then
-			return Vector3.new(x, 0, z)
-		end
-	end
-	return nil
-end
-
 -- Lomas anchas y bajas: una bola de hierba casi enterrada. Algunas llevan una cima de roca.
 local function buildMounds(terrain: Terrain, rng: Random)
 	for _ = 1, 14 do
 		local radius = rng:NextNumber(18, 34)
-		local spot = findSpot(rng, 72, 150, radius * 0.7, 4)
+		local spot = WorldLayout.findSpot(rng, 72, 150, radius * 0.7, 4)
 		if spot == nil then
 			continue
 		end
@@ -83,7 +72,7 @@ end
 -- Cordilleras bajas: cuatro bultos seguidos en línea. La última es de roca viva.
 local function buildRidges(terrain: Terrain, rng: Random)
 	for index = 1, 3 do
-		local spot = findSpot(rng, 100, 165, 52, 4) -- cabe la cordillera entera (60 de largo y 20 de radio en las puntas)
+		local spot = WorldLayout.findSpot(rng, 100, 165, 52, 4) -- cabe la cordillera entera (60 de largo y 20 de radio en las puntas)
 		if spot == nil then
 			continue
 		end
@@ -102,7 +91,7 @@ end
 local function buildMesas(terrain: Terrain, rng: Random)
 	for _ = 1, 2 do
 		local radius = rng:NextNumber(20, 25)
-		local spot = findSpot(rng, 115, 165, radius, 6)
+		local spot = WorldLayout.findSpot(rng, 115, 165, radius, 6)
 		if spot == nil then
 			continue
 		end
@@ -115,7 +104,7 @@ end
 local function buildBoulders(terrain: Terrain, rng: Random)
 	for _ = 1, 12 do
 		local radius = rng:NextNumber(3, 6.5)
-		local spot = findSpot(rng, 36, 110, radius, 3)
+		local spot = WorldLayout.findSpot(rng, 36, 110, radius, 3)
 		if spot == nil then
 			continue
 		end

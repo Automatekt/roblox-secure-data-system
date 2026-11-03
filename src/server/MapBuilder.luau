@@ -1,12 +1,14 @@
 --!strict
 -- Construye la escena: un claro de ruinas antiguas al atardecer.
 -- Todo es código (piezas y terreno propios), sin modelos descargados.
--- Presupuesto de rendimiento: unas 200 piezas ancladas, 8 luces sin sombras.
+-- Presupuesto de rendimiento: unas 210 piezas ancladas, 8 luces sin sombras. El terreno
+-- (montañas, lomas, rocas) no cuenta como piezas.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local MapParts = require(script.Parent.MapParts)
+local ChestPoints = require(script.Parent.ChestPoints)
 local Landmarks = require(script.Parent.Landmarks)
 local Ruins = require(script.Parent.Ruins)
 local WorldLayout = require(script.Parent.WorldLayout)
@@ -140,32 +142,23 @@ local function buildVegetation(parent: Instance, rng: Random)
 			placed += 1
 		end
 	end
-
-	-- Árboles estilizados en el borde del claro
-	local treeAngles = { 0.5, 1.1, 2.0, 2.7, 3.7, 4.4, 5.5 }
-	for _, angle in treeAngles do
-		local radius = rng:NextNumber(46, 58)
-		local x, z = polar(radius, angle)
-		local trunkColor = Palette.StoneDark:Lerp(Palette.Amber, 0.15)
-		newColumn(parent, "TreeTrunk", x, 0, z, 6, 1.3, trunkColor, Enum.Material.Wood, true)
-		for blob = 1, 3 do
-			local size = rng:NextNumber(5.5, 8)
-			local offset = Vector3.new(rng:NextNumber(-2, 2), 6 + blob * 0.9, rng:NextNumber(-2, 2))
-			newBall(parent, "TreeLeaves", Vector3.new(x, 0, z) + offset, size, mossColor(rng), Enum.Material.Grass, false)
-		end
-	end
 end
 
--- Piedras sueltas alrededor de los pilares y los arcos
+-- Piedras sueltas alrededor de los pilares y los arcos. Ninguna cae encima de un punto
+-- donde puede aparecer el cofre.
 local function buildRubble(parent: Instance, rng: Random)
-	for _ = 1, 14 do
+	local placed = 0
+	while placed < 14 do
 		local angle = rng:NextNumber(0, 2 * PI)
 		local radius = rng:NextNumber(19, 27)
 		local x, z = polar(radius, angle)
-		local size = Vector3.new(rng:NextNumber(0.8, 1.6), rng:NextNumber(0.5, 1), rng:NextNumber(0.8, 1.6))
-		local cframe = CFrame.new(x, PLAZA_TOP + size.Y / 2, z)
-			* CFrame.Angles(rng:NextNumber(-0.2, 0.2), rng:NextNumber(0, PI), rng:NextNumber(-0.2, 0.2))
-		newPart(parent, "Rubble", size, cframe, stoneColor(rng, 0.45), Enum.Material.Slate, false)
+		if not ChestPoints.isNearCandidate(x, z, 3.2) then
+			local size = Vector3.new(rng:NextNumber(0.8, 1.6), rng:NextNumber(0.5, 1), rng:NextNumber(0.8, 1.6))
+			local cframe = CFrame.new(x, PLAZA_TOP + size.Y / 2, z)
+				* CFrame.Angles(rng:NextNumber(-0.2, 0.2), rng:NextNumber(0, PI), rng:NextNumber(-0.2, 0.2))
+			newPart(parent, "Rubble", size, cframe, stoneColor(rng, 0.45), Enum.Material.Slate, false)
+			placed += 1
+		end
 	end
 end
 

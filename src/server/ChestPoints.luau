@@ -37,6 +37,19 @@ local validPoints: { Vector3 } = {}
 
 local ChestPoints = {}
 
+-- Dice si un punto del suelo (x, z) queda a menos de "margin" studs de algún lugar
+-- donde puede aparecer un cofre. El mapa lo usa para no poner adornos encima.
+function ChestPoints.isNearCandidate(x: number, z: number, margin: number): boolean
+	for _, point in CANDIDATES do
+		local dx = point.X - x
+		local dz = point.Z - z
+		if math.sqrt(dx * dx + dz * dz) < margin then
+			return true
+		end
+	end
+	return false
+end
+
 local function characterList(): { Instance }
 	local list = {}
 	for _, player in Players:GetPlayers() do

@@ -53,4 +53,19 @@ function WorldLayout.isFree(x: number, z: number, radius: number, margin: number
 	return true
 end
 
+-- Busca un sitio libre entre dos radios del centro (hasta 12 intentos al azar).
+-- Devuelve nil si no encuentra ninguno; quien llama simplemente se salta ese adorno.
+function WorldLayout.findSpot(rng: Random, minRadius: number, maxRadius: number, footprint: number, margin: number): Vector3?
+	for _ = 1, 12 do
+		local radius = rng:NextNumber(minRadius, maxRadius)
+		local angle = rng:NextNumber(0, 2 * math.pi)
+		local x = radius * math.cos(angle)
+		local z = radius * math.sin(angle)
+		if WorldLayout.isFree(x, z, footprint, margin) then
+			return Vector3.new(x, 0, z)
+		end
+	end
+	return nil
+end
+
 return WorldLayout
