@@ -22,37 +22,15 @@
     "Workspace": {
       "$properties": {
         "FilteringEnabled": true
-      },
-      "Baseplate": {
-        "$className": "Part",
-        "$properties": {
-          "Anchored": true,
-          "Color": [
-            0.38823,
-            0.37254,
-            0.38823
-          ],
-          "Locked": true,
-          "Position": [
-            0,
-            -10,
-            0
-          ],
-          "Size": [
-            512,
-            20,
-            512
-          ]
-        }
       }
     },
     "Lighting": {
       "$ignoreUnknownInstances": false,
       "$properties": {
         "Ambient": [
-          0.3451,
-          0.2588,
-          0.2039
+          0.4078,
+          0.3137,
+          0.251
         ],
         "OutdoorAmbient": [
           0.549,
@@ -60,7 +38,7 @@
           0.3608
         ],
         "Brightness": 2,
-        "ClockTime": 17.9,
+        "ClockTime": 17.75,
         "ColorShift_Top": [
           1.0,
           0.7451,
@@ -74,7 +52,7 @@
       "Atmosphere": {
         "$className": "Atmosphere",
         "$properties": {
-          "Density": 0.38,
+          "Density": 0.34,
           "Offset": 0.2,
           "Color": [
             1.0,
@@ -87,7 +65,7 @@
             0.4118
           ],
           "Glare": 0.5,
-          "Haze": 2.2
+          "Haze": 2.0
         }
       },
       "ColorCorrection": {

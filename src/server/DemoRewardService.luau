@@ -9,7 +9,7 @@ local CurrencyService = require(script.Parent.CurrencyService)
 local InventoryService = require(script.Parent.InventoryService)
 
 local CHEST_NAME = "RewardChest"
-local CHEST_POSITION = Vector3.new(-12, 1.5, -15)
+local CHEST_POSITION = Vector3.new(0, 2.7, 15) -- sobre la plaza, lejos de los puntos de aparición de cofres
 local REWARD_COINS = 100
 local REWARD_ITEM = "HealthPotion"
 local REWARD_ITEM_AMOUNT = 1
