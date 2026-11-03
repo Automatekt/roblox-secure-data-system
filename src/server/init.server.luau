@@ -3,9 +3,11 @@
 
 local DataService = require(script.DataService)
 local DataReplicator = require(script.DataReplicator)
+local DemoRewardService = require(script.DemoRewardService)
 local ColorPartService = require(script.ColorPartService)
 
 -- El replicador se registra antes de cargar datos para no perder a ningún jugador
 DataReplicator.start()
 DataService.start()
+DemoRewardService.start()
 ColorPartService.start()
