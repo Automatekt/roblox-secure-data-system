@@ -1,81 +1,32 @@
 --!strict
--- Modelo del cofre dorado, hecho solo con piezas (14). Sin modelos descargados.
--- Todas las piezas están ancladas: el cliente lo mueve y lo hace girar de forma
--- local, así que el servidor no gasta red en animarlo.
+-- Cofre del servidor: una caja invisible con el prompt, un dueño y un estado.
+-- La parte que se ve (el cofre dorado) la dibuja solo el cliente del dueño, así
+-- ningún otro jugador recibe el modelo ni sus efectos.
 
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Palette = require(ReplicatedStorage.Shared.Palette)
 local ChestShared = require(ReplicatedStorage.Shared.ChestShared)
 
 local ChestBuilder = {}
-
-local function newPart(
-	model: Model,
-	name: string,
-	size: Vector3,
-	offset: Vector3,
-	color: Color3,
-	material: Enum.Material,
-	shape: Enum.PartType?
-): Part
-	local part = Instance.new("Part")
-	part.Name = name
-	part.Size = size
-	part.CFrame = CFrame.new(offset)
-	part.Color = color
-	part.Material = material
-	part.Anchored = true
-	part.CanCollide = false -- nadie choca con el cofre: se recoge con el prompt
-	part.CanTouch = false
-	part.CastShadow = false
-	part.TopSurface = Enum.SurfaceType.Smooth
-	part.BottomSurface = Enum.SurfaceType.Smooth
-	if shape then
-		part.Shape = shape
-	end
-	part.Parent = model
-	return part
-end
 
 -- Crea el cofre flotando sobre un punto del suelo. Devuelve el modelo y su prompt.
 function ChestBuilder.build(groundPoint: Vector3, ownerUserId: number): (Model, ProximityPrompt)
 	local model = Instance.new("Model")
 	model.Name = "RewardChest_" .. ownerUserId
 
-	local wood = Palette.StoneDark:Lerp(Palette.Amber, 0.2)
-	local gold = Palette.Gold
-	local cylinder = Enum.PartType.Cylinder
+	local hitbox = Instance.new("Part")
+	hitbox.Name = "Hitbox"
+	hitbox.Size = Vector3.new(3.2, 3.2, 3.2)
+	hitbox.Transparency = 1
+	hitbox.Anchored = true
+	hitbox.CanCollide = false
+	hitbox.CanTouch = false
+	hitbox.CanQuery = false
+	hitbox.CastShadow = false
+	hitbox.Parent = model
 
-	-- Cuerpo y tapa redondeada
-	local body = newPart(model, "Body", Vector3.new(3, 1.6, 2), Vector3.zero, wood, Enum.Material.WoodPlanks)
-	newPart(model, "Lid", Vector3.new(3, 2, 2), Vector3.new(0, 0.8, 0), wood, Enum.Material.WoodPlanks, cylinder)
-
-	-- Bandas de oro alrededor del cuerpo y de la tapa
-	for _, side in { -1, 1 } do
-		newPart(model, "BodyBand", Vector3.new(0.3, 1.64, 2.08), Vector3.new(side * 0.9, 0, 0), gold, Enum.Material.Metal)
-		newPart(model, "LidBand", Vector3.new(0.3, 2.12, 2.12), Vector3.new(side * 0.9, 0.8, 0), gold, Enum.Material.Metal, cylinder)
-	end
-
-	-- Esquinas inferiores de oro
-	for _, x in { -1, 1 } do
-		for _, z in { -1, 1 } do
-			newPart(model, "Corner", Vector3.new(0.5, 0.5, 0.5), Vector3.new(x * 1.45, -0.75, z * 0.95), gold, Enum.Material.Metal)
-		end
-	end
-
-	-- Cerradura con ojo de cerradura brillante, y una joya en la tapa
-	newPart(model, "LockPlate", Vector3.new(0.6, 0.7, 0.12), Vector3.new(0, 0.35, 1.03), gold, Enum.Material.Metal)
-	newPart(model, "Keyhole", Vector3.new(0.16, 0.3, 0.06), Vector3.new(0, 0.33, 1.1), Palette.Amber, Enum.Material.Neon)
-	newPart(model, "Gem", Vector3.new(0.5, 0.5, 0.5), Vector3.new(0, 1.95, 0), gold, Enum.Material.Neon, Enum.PartType.Ball)
-
-	-- Aura dorada translúcida: con el bloom da el brillo suave
-	local aura = newPart(model, "Aura", Vector3.new(5, 5, 5), Vector3.new(0, 0.5, 0), gold, Enum.Material.Neon, Enum.PartType.Ball)
-	aura.Transparency = 0.9
-	aura.CanQuery = false
-
-	model.PrimaryPart = body
+	model.PrimaryPart = hitbox
 	model:PivotTo(CFrame.new(groundPoint + Vector3.new(0, ChestShared.HoverHeight, 0)))
 
 	local prompt = Instance.new("ProximityPrompt")
@@ -84,7 +35,7 @@ function ChestBuilder.build(groundPoint: Vector3, ownerUserId: number): (Model, 
 	prompt.HoldDuration = 0.5
 	prompt.MaxActivationDistance = 10
 	prompt.RequiresLineOfSight = false
-	prompt.Parent = body
+	prompt.Parent = hitbox
 
 	model:SetAttribute(ChestShared.OwnerAttribute, ownerUserId)
 	model:SetAttribute(ChestShared.StateAttribute, ChestShared.States.Idle)
