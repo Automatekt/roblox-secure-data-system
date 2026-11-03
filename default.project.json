@@ -2,19 +2,16 @@
   "name": "roblox-game",
   "tree": {
     "$className": "DataModel",
-
     "ReplicatedStorage": {
       "Shared": {
         "$path": "src/shared"
       }
     },
-
     "ServerScriptService": {
       "Server": {
         "$path": "src/server"
       }
     },
-
     "StarterPlayer": {
       "StarterPlayerScripts": {
         "Client": {
@@ -22,7 +19,6 @@
         }
       }
     },
-
     "Workspace": {
       "$properties": {
         "FilteringEnabled": true
@@ -51,16 +47,77 @@
       }
     },
     "Lighting": {
+      "$ignoreUnknownInstances": false,
       "$properties": {
         "Ambient": [
-          0,
-          0,
-          0
+          0.3451,
+          0.2588,
+          0.2039
+        ],
+        "OutdoorAmbient": [
+          0.549,
+          0.4392,
+          0.3608
         ],
         "Brightness": 2,
+        "ClockTime": 17.9,
+        "ColorShift_Top": [
+          1.0,
+          0.7451,
+          0.4706
+        ],
         "GlobalShadows": true,
+        "ShadowSoftness": 0.3,
         "Outlines": false,
         "Technology": "Voxel"
+      },
+      "Atmosphere": {
+        "$className": "Atmosphere",
+        "$properties": {
+          "Density": 0.38,
+          "Offset": 0.2,
+          "Color": [
+            1.0,
+            0.698,
+            0.4902
+          ],
+          "Decay": [
+            0.7451,
+            0.3529,
+            0.4118
+          ],
+          "Glare": 0.5,
+          "Haze": 2.2
+        }
+      },
+      "ColorCorrection": {
+        "$className": "ColorCorrectionEffect",
+        "$properties": {
+          "TintColor": [
+            1.0,
+            0.9333,
+            0.8627
+          ],
+          "Contrast": 0.08,
+          "Saturation": 0.12,
+          "Brightness": 0
+        }
+      },
+      "Bloom": {
+        "$className": "BloomEffect",
+        "$properties": {
+          "Intensity": 0.4,
+          "Size": 28,
+          "Threshold": 0.85
+        }
+      },
+      "Sky": {
+        "$className": "Sky",
+        "$properties": {
+          "StarCount": 400,
+          "SunAngularSize": 16,
+          "CelestialBodiesShown": true
+        }
       }
     },
     "SoundService": {
