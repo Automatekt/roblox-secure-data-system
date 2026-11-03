@@ -69,7 +69,7 @@ function ChestVisual.build(): Model
 	newPart(model, "Gem", Vector3.new(0.5, 0.5, 0.5), Vector3.new(0, 1.95, 0), gold, Enum.Material.Neon, Enum.PartType.Ball)
 
 	-- Aura dorada translúcida: con el bloom da el brillo suave
-	local aura = newPart(model, "Aura", Vector3.new(5, 5, 5), Vector3.new(0, 0.5, 0), gold, Enum.Material.Neon, Enum.PartType.Ball)
+	local aura = newPart(model, "Aura", Vector3.new(3.8, 3.8, 3.8), Vector3.new(0, 0.5, 0), gold, Enum.Material.Neon, Enum.PartType.Ball)
 	aura.Transparency = 0.9
 
 	model.PrimaryPart = body

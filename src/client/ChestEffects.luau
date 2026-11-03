@@ -23,6 +23,19 @@ local CLAIM_GROW_SECONDS = 0.18 -- hincha un poco antes de desaparecer
 local CLAIM_END_SECONDS = 0.8 -- cuándo termina de encogerse (el servidor lo borra a 1.0)
 local SPARKLE_TEXTURE = "rbxasset://textures/particles/sparkles_main.dds" -- textura oficial de Roblox
 
+-- Tamaño de los efectos (studs). El cofre mide unos 3 de ancho: se mantienen pequeños
+-- para que acompañen al cofre sin taparlo ni invadir el mapa.
+local FLASH_ENTRANCE_SIZE = 3.6
+local FLASH_CLAIM_SIZE = 4.2
+local FLASH_START_TRANSPARENCY = 0.6 -- empieza ya translúcido: se ve el cofre a través del destello
+local BURST_PARTICLE_SIZE = 0.5
+local ENTRANCE_BURST = { count = 18, speed = NumberRange.new(3, 6) }
+local CLAIM_BURST = { count = 28, speed = NumberRange.new(4, 8) }
+local POOF_BURST = { count = 10, speed = NumberRange.new(1.5, 3) }
+local IDLE_SPARKLE_SIZE = 0.3
+local IDLE_SPARKLE_RATE = 5
+local LIGHT_RANGE = 11
+
 local localPlayer = Players.LocalPlayer
 local visuals: Folder -- carpeta solo de este cliente donde viven los cofres dibujados
 
@@ -49,7 +62,7 @@ local function flash(position: Vector3, color: Color3, finalSize: number, second
 	part.Position = position
 	part.Color = color
 	part.Material = Enum.Material.Neon
-	part.Transparency = 0.2
+	part.Transparency = FLASH_START_TRANSPARENCY
 	part.Anchored = true
 	part.CanCollide = false
 	part.CanTouch = false
@@ -68,21 +81,21 @@ local function flash(position: Vector3, color: Color3, finalSize: number, second
 end
 
 -- Ráfaga de chispas que sale del cofre y se limpia sola
-local function burst(parent: BasePart, count: number, speed: NumberRange)
+local function burst(parent: BasePart, config: { count: number, speed: NumberRange })
 	local emitter = Instance.new("ParticleEmitter")
 	emitter.Name = "Burst"
 	emitter.Texture = SPARKLE_TEXTURE
 	emitter.Color = ColorSequence.new(Palette.Gold, Palette.Amber)
 	emitter.LightEmission = 1
 	emitter.Rate = 0 -- solo emite cuando se lo pedimos
-	emitter.Lifetime = NumberRange.new(0.6, 1)
-	emitter.Speed = speed
+	emitter.Lifetime = NumberRange.new(0.5, 0.8)
+	emitter.Speed = config.speed
 	emitter.SpreadAngle = Vector2.new(180, 180)
-	emitter.Drag = 2
-	emitter.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.6), NumberSequenceKeypoint.new(1, 0) })
+	emitter.Drag = 3
+	emitter.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, BURST_PARTICLE_SIZE), NumberSequenceKeypoint.new(1, 0) })
 	emitter.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1) })
 	emitter.Parent = parent
-	emitter:Emit(count)
+	emitter:Emit(config.count)
 	Debris:AddItem(emitter, 1.5)
 end
 
@@ -96,16 +109,30 @@ local function animateOwnChest(chest: Model)
 	visual:PivotTo(home)
 	visual.Parent = visuals
 
-	local body = visual.PrimaryPart :: BasePart
 	local aura = visual:FindFirstChild("Aura") :: BasePart
+
+	-- Las partículas y la luz van en una pieza invisible APARTE del modelo: ScaleTo
+	-- escala también los emisores, y como el cofre crece desde 0.01 las chispas
+	-- salían 100 veces más grandes. Esta pieza solo sigue su posición.
+	local fx = Instance.new("Part")
+	fx.Name = "FxAnchor"
+	fx.Size = Vector3.one * 0.2
+	fx.Transparency = 1
+	fx.Anchored = true
+	fx.CanCollide = false
+	fx.CanTouch = false
+	fx.CanQuery = false
+	fx.CastShadow = false
+	fx.CFrame = home
+	fx.Parent = visuals
 
 	-- Luz cálida y chispas suaves que se activan al terminar la entrada
 	local light = Instance.new("PointLight")
 	light.Color = Palette.Gold
-	light.Range = 14
+	light.Range = LIGHT_RANGE
 	light.Brightness = 0
 	light.Shadows = false
-	light.Parent = body
+	light.Parent = fx
 
 	local sparkles = Instance.new("ParticleEmitter")
 	sparkles.Name = "Sparkles"
@@ -113,18 +140,18 @@ local function animateOwnChest(chest: Model)
 	sparkles.Color = ColorSequence.new(Palette.Gold)
 	sparkles.LightEmission = 1
 	sparkles.Enabled = false
-	sparkles.Rate = 7
-	sparkles.Lifetime = NumberRange.new(1, 1.6)
-	sparkles.Speed = NumberRange.new(0.5, 1.5)
+	sparkles.Rate = IDLE_SPARKLE_RATE
+	sparkles.Lifetime = NumberRange.new(0.8, 1.2)
+	sparkles.Speed = NumberRange.new(0.3, 0.8)
 	sparkles.SpreadAngle = Vector2.new(180, 180)
-	sparkles.Acceleration = Vector3.new(0, 1.5, 0)
-	sparkles.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.4), NumberSequenceKeypoint.new(1, 0) })
+	sparkles.Acceleration = Vector3.new(0, 1, 0)
+	sparkles.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, IDLE_SPARKLE_SIZE), NumberSequenceKeypoint.new(1, 0) })
 	sparkles.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.1), NumberSequenceKeypoint.new(1, 1) })
-	sparkles.Parent = body
+	sparkles.Parent = fx
 
 	-- Entrada: destello y chispas
-	flash(home.Position, Palette.Gold, 9, 0.5)
-	burst(body, 24, NumberRange.new(5, 10))
+	flash(home.Position, Palette.Gold, FLASH_ENTRANCE_SIZE, 0.5)
+	burst(fx, ENTRANCE_BURST)
 	ChestSounds.play("Appear")
 
 	local phase = "Entering" -- Entering, Idle, Claiming
@@ -139,8 +166,8 @@ local function animateOwnChest(chest: Model)
 		phase = "Claiming"
 		phaseStart = os.clock()
 		sparkles.Enabled = false
-		flash(visual:GetPivot().Position, Palette.Parchment, 12, 0.45)
-		burst(body, 40, NumberRange.new(8, 16))
+		flash(visual:GetPivot().Position, Palette.Parchment, FLASH_CLAIM_SIZE, 0.45)
+		burst(fx, CLAIM_BURST)
 		ChestSounds.play("Collect")
 	end
 
@@ -186,13 +213,14 @@ local function animateOwnChest(chest: Model)
 			light.Brightness = math.max(0, light.Brightness - dt * 4)
 			if elapsed >= CLAIM_END_SECONDS - 0.1 and not claimBurstDone then
 				claimBurstDone = true
-				burst(body, 12, NumberRange.new(2, 5)) -- el último "puf"
+				burst(fx, POOF_BURST) -- el último "puf"
 			end
 		end
 
 		angle += dt * spinSpeed
 		visual:ScaleTo(math.max(scale, 0.01))
 		visual:PivotTo(home * CFrame.new(0, lift, 0) * CFrame.Angles(0, angle, 0))
+		fx.Position = home.Position + Vector3.new(0, lift, 0)
 	end)
 
 	-- Cuando el servidor borra el cofre, se limpia todo lo local (una sola vez)
@@ -205,6 +233,7 @@ local function animateOwnChest(chest: Model)
 		frameConnection:Disconnect()
 		stateConnection:Disconnect()
 		visual:Destroy()
+		fx:Destroy()
 	end)
 end
 
