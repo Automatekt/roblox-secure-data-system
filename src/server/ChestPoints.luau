@@ -9,6 +9,10 @@ local FLOOR_Y = 1.2 -- altura del suelo de la plaza (ver MapBuilder)
 local FLOOR_TOLERANCE = 0.3
 local CLEARANCE = Vector3.new(4, 4, 4) -- espacio libre mínimo sobre el punto
 local CLEARANCE_START = 0.5 -- el espacio libre empieza un poco por encima del suelo
+local MIN_STEP = 15 -- el siguiente cofre aparece a esta distancia como mínimo...
+local MAX_STEP = 45 -- ...y como máximo del anterior
+
+local random = Random.new()
 
 -- Seis puntos en un anillo interior (radio 10) y ocho en uno exterior (radio 26),
 -- repartidos entre los pilares y las antorchas.
@@ -79,6 +83,45 @@ end
 -- Puntos válidos (vacío hasta que termine validate)
 function ChestPoints.getAll(): { Vector3 }
 	return validPoints
+end
+
+local function containsPoint(list: { Vector3 }, point: Vector3): boolean
+	for _, other in list do
+		if (other - point).Magnitude < 0.5 then
+			return true
+		end
+	end
+	return false
+end
+
+-- Elige el siguiente punto: cercano al actual (15 a 45 studs), que no esté en
+-- "avoid" (últimos puntos del jugador y puntos de otros cofres). Si no hay ninguno
+-- con esas condiciones, relaja primero la distancia y luego "avoid".
+function ChestPoints.pickNext(current: Vector3?, avoid: { Vector3 }): Vector3?
+	local near: { Vector3 } = {}
+	local anyFree: { Vector3 } = {}
+	local anyOther: { Vector3 } = {}
+
+	for _, point in validPoints do
+		if current == nil or not containsPoint({ current }, point) then
+			table.insert(anyOther, point)
+			if not containsPoint(avoid, point) then
+				table.insert(anyFree, point)
+				if current ~= nil then
+					local distance = (point - current).Magnitude
+					if distance >= MIN_STEP and distance <= MAX_STEP then
+						table.insert(near, point)
+					end
+				end
+			end
+		end
+	end
+
+	local pool = if #near > 0 then near elseif #anyFree > 0 then anyFree else anyOther
+	if #pool == 0 then
+		return nil
+	end
+	return pool[random:NextInteger(1, #pool)]
 end
 
 return ChestPoints

@@ -7,6 +7,7 @@
 return {
 	Loaded = "DataLoaded", -- true cuando los datos del jugador ya cargaron
 	Coins = "Coins",
+	Notice = "Notice", -- último aviso para el jugador (ver Notifier)
 	itemKey = function(itemId: string): string
 		return "Item_" .. itemId
 	end,
