@@ -38,6 +38,9 @@ local function syncAll(player: Player)
 	-- El PlayerGui puede tardar un instante en existir cuando el jugador acaba de entrar
 	local playerGui = player:WaitForChild("PlayerGui", PLAYER_GUI_TIMEOUT)
 	if playerGui == nil then
+		if player.Parent == nil then
+			return -- salió mientras esperábamos: salida normal, no hay nada que avisar
+		end
 		warn(`[DataReplicator] {player.Name} no tiene PlayerGui; no se pueden mostrar sus datos`)
 		return
 	end

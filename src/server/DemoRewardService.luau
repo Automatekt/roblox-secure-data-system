@@ -19,7 +19,8 @@ local lastAttempt: { [Player]: number } = {}
 
 local DemoRewardService = {}
 
--- Da la recompensa completa o nada. Devuelve "Ok" o el motivo por el que no se dio.
+-- Las monedas son la recompensa principal; el objeto es un extra que solo se da
+-- si cabe en el inventario. Devuelve "Ok" o el motivo por el que no se dio nada.
 function DemoRewardService.claim(player: Player): string
 	-- El cooldown cuenta desde el intento, así que spamear el prompt no sirve de nada
 	local now = os.clock()
@@ -29,18 +30,13 @@ function DemoRewardService.claim(player: Player): string
 	end
 	lastAttempt[player] = now
 
-	local itemResult = InventoryService.addItem(player, REWARD_ITEM, REWARD_ITEM_AMOUNT)
-	if itemResult ~= "Ok" then
-		return itemResult
-	end
-
 	local coinsResult = CurrencyService.addCoins(player, REWARD_COINS)
 	if coinsResult ~= "Ok" then
-		-- Las monedas no cupieron: se deshace el objeto para no dar media recompensa
-		InventoryService.removeItem(player, REWARD_ITEM, REWARD_ITEM_AMOUNT)
 		return coinsResult
 	end
 
+	-- Si el objeto ya está al máximo, se ignora: el jugador igual recibió las monedas
+	InventoryService.addItem(player, REWARD_ITEM, REWARD_ITEM_AMOUNT)
 	return "Ok"
 end
 
