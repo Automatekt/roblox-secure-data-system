@@ -4,6 +4,7 @@
 -- (negativo, texto, NaN, infinito, decimales) nunca llega a los datos guardados.
 
 local DataService = require(script.Parent.DataService)
+local Validation = require(script.Parent.Validation)
 
 local MAX_COINS = 1_000_000_000
 
@@ -11,14 +12,7 @@ export type Result = "Ok" | "NoData" | "InvalidAmount" | "NotEnoughCoins" | "Ove
 
 local CurrencyService = {}
 
--- Una cantidad válida es un número entero, finito y mayor que cero
-local function isValidAmount(amount: any): boolean
-	return type(amount) == "number"
-		and amount == amount -- descarta NaN (NaN no es igual a sí mismo)
-		and amount > 0
-		and amount < math.huge
-		and amount % 1 == 0
-end
+local isValidAmount = Validation.isValidAmount
 
 function CurrencyService.getCoins(player: Player): number?
 	local data = DataService.getData(player)
