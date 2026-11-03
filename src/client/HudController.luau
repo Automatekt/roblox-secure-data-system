@@ -1,6 +1,7 @@
 --!strict
 -- Muestra las monedas y el inventario del jugador.
--- Solo lee atributos que pone el servidor; no tiene botones ni envía nada.
+-- Solo lee atributos que el servidor pone en el PlayerGui de este jugador (y solo
+-- este jugador los recibe); no tiene botones ni envía nada.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -40,6 +41,7 @@ end
 
 function HudController.start()
 	local player = Players.LocalPlayer
+	local playerGui = player:WaitForChild("PlayerGui")
 
 	local gui = Instance.new("ScreenGui")
 	gui.Name = "DataHud"
@@ -93,7 +95,7 @@ function HudController.start()
 	end
 
 	local function render()
-		local loaded = player:GetAttribute(DataAttributes.Loaded) == true
+		local loaded = playerGui:GetAttribute(DataAttributes.Loaded) == true
 		headerLabel.Visible = loaded
 
 		if not loaded then
@@ -105,12 +107,12 @@ function HudController.start()
 			return
 		end
 
-		local coins = player:GetAttribute(DataAttributes.Coins)
+		local coins = playerGui:GetAttribute(DataAttributes.Coins)
 		coinsLabel.Text = "Monedas: " .. formatNumber(if type(coins) == "number" then coins else 0)
 
 		local anyItem = false
 		for itemId, row in rows do
-			local count = player:GetAttribute(DataAttributes.itemKey(itemId))
+			local count = playerGui:GetAttribute(DataAttributes.itemKey(itemId))
 			local amount = if type(count) == "number" then count else 0
 			row.Visible = amount > 0
 			if amount > 0 then
@@ -122,14 +124,14 @@ function HudController.start()
 	end
 
 	-- El HUD vive toda la sesión, así que estas conexiones no necesitan limpiarse
-	player:GetAttributeChangedSignal(DataAttributes.Loaded):Connect(render)
-	player:GetAttributeChangedSignal(DataAttributes.Coins):Connect(render)
+	playerGui:GetAttributeChangedSignal(DataAttributes.Loaded):Connect(render)
+	playerGui:GetAttributeChangedSignal(DataAttributes.Coins):Connect(render)
 	for _, itemId in itemIds do
-		player:GetAttributeChangedSignal(DataAttributes.itemKey(itemId)):Connect(render)
+		playerGui:GetAttributeChangedSignal(DataAttributes.itemKey(itemId)):Connect(render)
 	end
 
 	render()
-	gui.Parent = player:WaitForChild("PlayerGui")
+	gui.Parent = playerGui
 end
 
 return HudController
