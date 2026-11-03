@@ -26,16 +26,17 @@
       "$ignoreUnknownInstances": false,
       "$properties": {
         "Ambient": [
-          0.4078,
-          0.3137,
-          0.251
+          0.4902,
+          0.3804,
+          0.3098
         ],
         "OutdoorAmbient": [
-          0.549,
-          0.4392,
-          0.3608
+          0.6588,
+          0.5294,
+          0.4392
         ],
-        "Brightness": 2,
+        "Brightness": 2.3,
+        "ExposureCompensation": 0.25,
         "ClockTime": 17.75,
         "ColorShift_Top": [
           1.0,
