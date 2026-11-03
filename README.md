@@ -69,7 +69,7 @@ end
 - Inventario: añadir y quitar, objetos inventados, ids raros, cantidades inválidas, máximos por objeto.
 - El panel con el saldo máximo y los 4 objetos, sin textos cortados.
 - 2 jugadores: cada uno ve solo sus datos y ninguno puede ver los del otro. Probado también tras reaparecer.
-- El cofre de demostración con el prompt real: cooldown y spam.
+- El cofre de demostración con el prompt real: cooldown y spam, con 3 jugadores a la vez. Cada uno recibe su recompensa, el cooldown de cada uno es independiente y ninguno ve los datos de los demás.
 - Un cliente que se pone monedas en su propio equipo no cambia nada en el servidor.
 - Emulador de celular (Samsung Galaxy S25 Ultra simulado): el panel no se superpone con el botón de salto.
 
