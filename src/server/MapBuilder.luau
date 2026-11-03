@@ -7,7 +7,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local MapParts = require(script.Parent.MapParts)
+local Landmarks = require(script.Parent.Landmarks)
 local Ruins = require(script.Parent.Ruins)
+local WorldLayout = require(script.Parent.WorldLayout)
 local WorldTerrain = require(script.Parent.WorldTerrain)
 
 local SEED = 20261103 -- misma escena en cada servidor
@@ -125,13 +127,14 @@ local function buildVegetation(parent: Instance, rng: Random)
 		newBall(parent, "Bush", Vector3.new(x, PLAZA_TOP + size * 0.3, z), size, mossColor(rng), Enum.Material.Grass, false)
 	end
 
-	-- Arbustos sueltos fuera de la plaza, sin tapar el camino de entrada
+	-- Arbustos sueltos fuera de la plaza
 	local placed = 0
 	while placed < 12 do
 		local angle = rng:NextNumber(0, 2 * PI)
 		local radius = rng:NextNumber(33, 52)
 		local x, z = polar(radius, angle)
-		if math.abs(x) > 8 then
+		-- Fuera del camino de entrada (WorldLayout sabe por dónde pasa)
+		if WorldLayout.isFree(x, z, 2.5, 0.5) then
 			local size = rng:NextNumber(2.5, 4.5)
 			newBall(parent, "Bush", Vector3.new(x, size * 0.3, z), size, mossColor(rng), Enum.Material.Grass, false)
 			placed += 1
@@ -205,6 +208,7 @@ function MapBuilder.build(): Folder
 	buildTorches(newFolder(map, "Torches"))
 	buildVegetation(newFolder(map, "Vegetation"), rng)
 	buildRubble(newFolder(map, "Rubble"), rng)
+	Landmarks.build(newFolder(map, "Landmarks"), Random.new(SEED + 2))
 	buildSpawn(map)
 
 	map.Parent = workspace
