@@ -13,6 +13,7 @@ local TweenService = game:GetService("TweenService")
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local ChestShared = require(ReplicatedStorage.Shared.ChestShared)
 local ChestVisual = require(script.Parent.ChestVisual)
+local ChestSounds = require(script.Parent.ChestSounds)
 
 local ENTRANCE_SECONDS = 0.8 -- crece desde cero con un pequeño rebote
 local BOB_HEIGHT = 0.35 -- cuánto sube y baja flotando
@@ -124,6 +125,7 @@ local function animateOwnChest(chest: Model)
 	-- Entrada: destello y chispas
 	flash(home.Position, Palette.Gold, 9, 0.5)
 	burst(body, 24, NumberRange.new(5, 10))
+	ChestSounds.play("Appear")
 
 	local phase = "Entering" -- Entering, Idle, Claiming
 	local phaseStart = os.clock()
@@ -139,6 +141,7 @@ local function animateOwnChest(chest: Model)
 		sparkles.Enabled = false
 		flash(visual:GetPivot().Position, Palette.Parchment, 12, 0.45)
 		burst(body, 40, NumberRange.new(8, 16))
+		ChestSounds.play("Collect")
 	end
 
 	local stateConnection = chest:GetAttributeChangedSignal(ChestShared.StateAttribute):Connect(function()
