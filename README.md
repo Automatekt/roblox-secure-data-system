@@ -33,12 +33,10 @@ El servidor copia los datos como atributos en el `PlayerGui` de cada jugador. Ro
 - `DataReplicator.luau`: copia los datos al `PlayerGui` del dueño para que su pantalla los muestre.
 - `DemoRewardService.luau`: el cofre de demostración, con cooldown validado en el servidor. Si el saldo está al tope no da nada; si la poción está al máximo, da solo las monedas.
 - `Packages/ProfileStore.luau`: librería de terceros (ver Licencias).
-- `ColorPartService.luau`: una Part que cambia de color al tocarla. Es una prueba aparte de una etapa anterior y no forma parte del sistema de datos.
 
 **Compartido** (`src/shared`)
 - `ItemCatalog.luau`: la lista de objetos que existen (Espada, Poción de vida, Gema, Llave) con su máximo. Está congelada para que nadie la cambie por accidente.
 - `DataAttributes.luau`: los nombres de los atributos con los que el servidor y la pantalla se entienden.
-- `ColorPartConfig.luau`: ajustes de la prueba de la Part de colores.
 
 **Cliente** (`src/client`)
 - `init.client.luau`: punto de entrada del cliente.
