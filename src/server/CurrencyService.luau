@@ -4,6 +4,7 @@
 -- (negativo, texto, NaN, infinito, decimales) nunca llega a los datos guardados.
 
 local DataService = require(script.Parent.DataService)
+local DataReplicator = require(script.Parent.DataReplicator)
 local Validation = require(script.Parent.Validation)
 
 local MAX_COINS = 1_000_000_000
@@ -35,6 +36,7 @@ function CurrencyService.addCoins(player: Player, amount: any): Result
 		return "OverCap"
 	end
 	data.Coins += amount
+	DataReplicator.syncCoins(player)
 	return "Ok"
 end
 
@@ -51,6 +53,7 @@ function CurrencyService.spendCoins(player: Player, amount: any): Result
 		return "NotEnoughCoins"
 	end
 	data.Coins -= amount
+	DataReplicator.syncCoins(player)
 	return "Ok"
 end
 

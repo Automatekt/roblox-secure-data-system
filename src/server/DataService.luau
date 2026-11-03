@@ -16,7 +16,14 @@ local KICK_SESSION_ENDED = "Tu sesión de datos terminó (¿entraste desde otro 
 local store = ProfileStore.New(STORE_NAME, DataTemplate)
 local profiles: { [Player]: ProfileStore.Profile<DataTemplate.PlayerData> } = {}
 
+local loadedCallbacks: { (Player) -> () } = {}
+
 local DataService = {}
+
+-- Avisa cuando los datos de un jugador terminan de cargar
+function DataService.onLoaded(callback: (Player) -> ())
+	table.insert(loadedCallbacks, callback)
+end
 
 -- Devuelve los datos del jugador, o nil si todavía no cargaron o ya salió.
 function DataService.getData(player: Player): DataTemplate.PlayerData?
@@ -66,6 +73,10 @@ local function loadPlayer(player: Player)
 	end)
 
 	profiles[player] = profile
+
+	for _, callback in loadedCallbacks do
+		task.spawn(callback, player)
+	end
 end
 
 local function releasePlayer(player: Player)

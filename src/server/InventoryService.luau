@@ -6,6 +6,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local DataService = require(script.Parent.DataService)
+local DataReplicator = require(script.Parent.DataReplicator)
 local Validation = require(script.Parent.Validation)
 local ItemCatalog = require(ReplicatedStorage.Shared.ItemCatalog)
 
@@ -51,6 +52,7 @@ function InventoryService.addItem(player: Player, itemId: any, amount: any): Res
 		return "OverCap"
 	end
 	data.Inventory[itemId] = current + amount
+	DataReplicator.syncItem(player, itemId)
 	return "Ok"
 end
 
@@ -73,6 +75,7 @@ function InventoryService.removeItem(player: Player, itemId: any, amount: any): 
 	end
 	-- Al llegar a 0 se borra la entrada para no guardar basura
 	data.Inventory[itemId] = if current == amount then nil else current - amount
+	DataReplicator.syncItem(player, itemId)
 	return "Ok"
 end
 
