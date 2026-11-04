@@ -117,11 +117,11 @@ Presupuesto del mapa: unas 210 piezas ancladas, 8 luces sin sombras (antorchas) 
 - **Pasada visual 7, vista en Play:** el anillo de montañas esconde el borde del mundo, el camino sale del arco de entrada, hay lomas, rocas, árboles y muros, las luciérnagas y el polvo aparecen, y la Salida no muestra errores nuevos.
 - **3 jugadores con el cofre por jugador:** cada uno ve su propio cofre, su saldo y sus objetos, sin ver los de los demás.
 - **Emulador de celular (Samsung Galaxy A16):** el panel no tapa el cofre ni al personaje.
+- **Guardado real entre sesiones** (lugar publicado y privado, con el acceso de Studio a los servicios de API activado): se recogieron 3 cofres (300 monedas y 3 pociones), se detuvo la prueba, se volvió a entrar y el saldo y el inventario seguían. Se probó con un solo jugador desde Studio, no en un servidor publicado.
 - **Emulador de tableta y de consola:** la interfaz se ve y funciona bien (probado por el usuario).
 
 **Sin probar todavía:**
 - Rendimiento real de la pasada 7 (conteo de piezas y partículas medido en Studio) y su comportamiento en una tableta.
-- Guardado real entre sesiones: los datos de prueba se borran al detener Studio. Necesita el lugar publicado.
 - Expulsión por fallo de carga de datos.
 - Choque entre dos servidores que quieren el mismo jugador.
 - Los sonidos en un lugar publicado.
