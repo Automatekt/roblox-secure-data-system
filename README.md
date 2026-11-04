@@ -131,6 +131,7 @@ Presupuesto del mapa: unas 210 piezas ancladas, 8 luces sin sombras (antorchas) 
 
 Salieron de la revisión de seguridad (un revisor de solo lectura leyó el código y no encontró fallos críticos ni altos):
 
+- **Si dos servidores quieren al mismo jugador, el progreso no guardado se pierde.** El servidor nuevo espera 40 segundos y luego toma la sesión con lo último que estaba guardado. El servidor viejo se entera y expulsa al jugador en su siguiente guardado automático. Se guarda cada 60 segundos (el valor por defecto de ProfileStore es 300), así que lo máximo que se puede perder en este caso es lo ganado en el último minuto. Salir normalmente guarda al instante y no pierde nada. Esto lo vimos en la prueba real: se entró desde el cliente de Roblox con Studio todavía abierto y se perdieron las dos últimas monedas recogidas.
 - **El cofre solo tiene cooldown, sin límite total.** El servidor valida el dueño, el estado, la distancia y el cooldown, pero la posición del jugador la controla su cliente. Alguien con un exploit podría sacar 100 monedas cada 3 segundos hasta el tope. Es una demo. En una tienda o misión real hay que añadir un límite por día o de un solo uso, guardado en los datos del jugador.
 - **El cooldown (3 s) es más largo que lo que tarda en aparecer el siguiente cofre (unos 2.2 s).** Si un jugador lo recoge enseguida ve "Espera un momento". Es decisión de diseño.
 - **Si algún día se quita un objeto del catálogo**, los jugadores que ya lo tengan lo conservan en su guardado sin poder verlo. Habría que hacer una migración con `SchemaVersion`.

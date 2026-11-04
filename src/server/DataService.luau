@@ -10,9 +10,14 @@ local ProfileStore = require(script.Parent.Packages.ProfileStore)
 local DataTemplate = require(script.Parent.DataTemplate)
 
 local STORE_NAME = "PlayerData"
+-- ProfileStore guarda cada 300 s por defecto. Con 60 s se pierde menos si otro servidor
+-- toma la sesión, y el servidor viejo se entera antes (la petición de liberar se lee al guardar).
+-- Un guardado por minuto por jugador queda muy por debajo del límite de Roblox.
+local AUTO_SAVE_SECONDS = 60
 local KICK_LOAD_FAILED = "No se pudieron cargar tus datos. Vuelve a entrar en unos minutos."
 local KICK_SESSION_ENDED = "Tu sesión de datos terminó (¿entraste desde otro servidor?). Vuelve a entrar."
 
+ProfileStore.SetConstant("AUTO_SAVE_PERIOD", AUTO_SAVE_SECONDS)
 local store = ProfileStore.New(STORE_NAME, DataTemplate)
 local profiles: { [Player]: ProfileStore.Profile<DataTemplate.PlayerData> } = {}
 
