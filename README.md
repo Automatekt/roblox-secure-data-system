@@ -125,7 +125,7 @@ Presupuesto del mapa: unas 210 piezas ancladas, 8 luces sin sombras (antorchas) 
 - **Emulador de tableta y de consola:** la interfaz se ve y funciona bien (probado por el usuario).
 
 **Sin probar todavía:**
-- Rendimiento real de la pasada 7 (conteo de piezas y partículas medido en Studio) y su comportamiento en una tableta.
+- Rendimiento real de la pasada 7 (conteo de piezas y partículas medido en Studio).
 - Expulsión por fallo de carga de datos.
 - Un celular real (las pruebas de tableta y consola se hicieron con los emuladores de Studio).
 
