@@ -24,9 +24,10 @@ local function paintTerrain(terrain: Terrain)
 	terrain:SetMaterialColor(Enum.Material.Grass, grass)
 	terrain:SetMaterialColor(Enum.Material.Rock, rock)
 	terrain:SetMaterialColor(Enum.Material.Slate, slate)
+	terrain:SetMaterialColor(Enum.Material.Limestone, Palette.Stone:Lerp(Palette.Parchment, 0.3)) -- cimas claras
 end
 
--- Cada montaña son tres bultos de roca: el cuerpo, una cima y un hombro al costado.
+-- Cada montaña son tres bultos de roca (cuerpo, cima y hombro al costado) y a veces una aguja.
 -- Los vecinos se solapan, así que no quedan huecos por donde se vea el borde.
 local function buildMountains(terrain: Terrain, rng: Random)
 	for index = 0, MOUNTAIN_COUNT - 1 do
@@ -37,13 +38,22 @@ local function buildMountains(terrain: Terrain, rng: Random)
 		-- Cuerpo
 		local bodyRadius = rng:NextNumber(52, 62) -- grandes, para que ningún par de vecinos deje hueco
 		local bodyY = bodyRadius * 0.15
-		terrain:FillBall(Vector3.new(cx, bodyY, cz), bodyRadius, Enum.Material.Rock)
+		-- Variedad: algunos cuerpos de pizarra oscura y las cimas alternan caliza clara y pizarra
+		local bodyMaterial = if rng:NextNumber() < 0.3 then Enum.Material.Slate else Enum.Material.Rock
+		terrain:FillBall(Vector3.new(cx, bodyY, cz), bodyRadius, bodyMaterial)
 
 		-- Cima: más chica y más alta, algo desplazada
 		local peakRadius = bodyRadius * rng:NextNumber(0.5, 0.65)
 		local px = cx + rng:NextNumber(-0.3, 0.3) * bodyRadius
 		local pz = cz + rng:NextNumber(-0.3, 0.3) * bodyRadius
-		terrain:FillBall(Vector3.new(px, bodyY + bodyRadius * 0.55, pz), peakRadius, Enum.Material.Slate)
+		local peakMaterial = if rng:NextNumber() < 0.5 then Enum.Material.Limestone else Enum.Material.Slate
+		terrain:FillBall(Vector3.new(px, bodyY + bodyRadius * 0.55, pz), peakRadius, peakMaterial)
+
+		-- A veces una aguja más alta sobre la cima, para romper la silueta redonda
+		if rng:NextNumber() < 0.4 then
+			local spire = peakRadius * 0.55
+			terrain:FillBall(Vector3.new(px, bodyY + bodyRadius * 0.55 + peakRadius * 0.8, pz), spire, peakMaterial)
+		end
 
 		-- Hombro: un bulto bajo a un lado, sobre la línea del anillo
 		local side = if rng:NextNumber() < 0.5 then -1 else 1

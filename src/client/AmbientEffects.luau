@@ -32,7 +32,7 @@ local function newFireflies(anchor: Part, rate: number)
 	emitter.Speed = NumberRange.new(0.3, 0.9)
 	emitter.SpreadAngle = Vector2.new(180, 180)
 	emitter.Drag = 0.6
-	emitter.Size = NumberSequence.new(0.9)
+	emitter.Size = NumberSequence.new(0.6)
 	-- Aparecen, se apagan y se encienden suave, y se van: parpadeo lento
 	emitter.Transparency = NumberSequence.new({
 		NumberSequenceKeypoint.new(0, 1),
