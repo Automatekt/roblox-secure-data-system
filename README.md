@@ -4,10 +4,8 @@ Pieza de portafolio. Guarda las monedas y el inventario de cada jugador sin perd
 
 **Cómo se hizo:** el código se desarrolló dirigiendo a Claude (IA) y se verificó con pruebas en Roblox Studio. No está escrito a mano.
 
-![Mapa de ruinas](docs/mapa-ruinas.jpg)
-![Cofre dorado](docs/cofre-dorado.jpg)
-
-*Las capturas son anteriores a la pasada visual 7 (montañas, camino, árboles y ruinas lejanas). Se actualizarán cuando se pruebe esa pasada.*
+![Entrada a las ruinas](docs/mapa-ruinas.png)
+![Cofre dorado con luciérnagas](docs/cofre-dorado.png)
 
 ## Qué hace
 
