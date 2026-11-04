@@ -12,7 +12,7 @@ local WorldLayout = require(script.Parent.WorldLayout)
 local PI = math.pi
 
 local PATH_STEP = 6.5 -- largo de cada tramo de camino
-local PATH_THICKNESS = 0.2
+local PATH_THICKNESS = 0.1
 local GROVE_COUNT = 3
 local TREES_PER_GROVE = 3
 local WALL_COUNT = 8
@@ -27,7 +27,7 @@ local Landmarks = {}
 -- Camino de tierra desde el arco de entrada hacia el horizonte, con curvas suaves.
 -- Son tramos planos pegados al suelo; no chocan, así que no estorban a nadie.
 local function buildPath(parent: Instance, rng: Random)
-	local dirt = Palette.StoneDark:Lerp(Palette.Amber, 0.22)
+	local dirt = Palette.Stone:Lerp(Palette.Amber, 0.2):Lerp(Palette.StoneDark, 0.35)
 	local width = WorldLayout.PathWidth
 
 	local z = WorldLayout.PathStartZ + 0.5
@@ -40,7 +40,7 @@ local function buildPath(parent: Instance, rng: Random)
 		local to = Vector3.new(WorldLayout.pathX(nextZ), height, nextZ)
 		-- Un poco más largo que el paso para que los tramos se solapen en las curvas
 		local length = (to - from).Magnitude + 0.8
-		local color = dirt:Lerp(Palette.Stone, rng:NextNumber(0, 0.25))
+		local color = dirt:Lerp(Palette.Stone, rng:NextNumber(0, 0.05)) -- casi igual en todos: un sendero, no losas
 		newPart(
 			parent,
 			"PathSegment",
