@@ -31,10 +31,13 @@ local function buildPath(parent: Instance, rng: Random)
 	local width = WorldLayout.PathWidth
 
 	local z = WorldLayout.PathStartZ + 0.5
+	local layer = 0 -- cada tramo un poquito más alto que el anterior: sin parpadeo donde se solapan
 	while z < WorldLayout.PathEndZ do
+		layer += 1
 		local nextZ = math.min(z + PATH_STEP, WorldLayout.PathEndZ)
-		local from = Vector3.new(WorldLayout.pathX(z), PATH_THICKNESS / 2, z)
-		local to = Vector3.new(WorldLayout.pathX(nextZ), PATH_THICKNESS / 2, nextZ)
+		local height = PATH_THICKNESS / 2 + layer * 0.002
+		local from = Vector3.new(WorldLayout.pathX(z), height, z)
+		local to = Vector3.new(WorldLayout.pathX(nextZ), height, nextZ)
 		-- Un poco más largo que el paso para que los tramos se solapen en las curvas
 		local length = (to - from).Magnitude + 0.8
 		local color = dirt:Lerp(Palette.Stone, rng:NextNumber(0, 0.25))

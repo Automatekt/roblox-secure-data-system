@@ -59,7 +59,8 @@ local function buildPillars(parent: Instance, rng: Random)
 		local x, z = polar(PILLAR_RADIUS, angle)
 		local height = PILLAR_BROKEN_HEIGHTS[index]
 		local intact = height >= 10
-		Ruins.pillar(parent, rng, x, z, PLAZA_TOP, if intact then height - 1.9 else height - 1, if intact then "Capital" else "Broken")
+		local finish: Ruins.PillarFinish = if intact then "Capital" else "Broken"
+		Ruins.pillar(parent, rng, x, z, PLAZA_TOP, if intact then height - 1.9 else height - 1, finish)
 
 		-- Los pilares rotos dejan un trozo de columna caído al lado
 		if not intact then
@@ -131,7 +132,10 @@ local function buildVegetation(parent: Instance, rng: Random)
 
 	-- Arbustos sueltos fuera de la plaza
 	local placed = 0
-	while placed < 12 do
+	for _ = 1, 200 do -- tope de intentos, por si el área libre se llegara a llenar
+		if placed >= 12 then
+			break
+		end
 		local angle = rng:NextNumber(0, 2 * PI)
 		local radius = rng:NextNumber(33, 52)
 		local x, z = polar(radius, angle)
@@ -148,9 +152,12 @@ end
 -- donde puede aparecer el cofre.
 local function buildRubble(parent: Instance, rng: Random)
 	local placed = 0
-	while placed < 14 do
+	for _ = 1, 200 do -- tope de intentos
+		if placed >= 14 then
+			break
+		end
 		local angle = rng:NextNumber(0, 2 * PI)
-		local radius = rng:NextNumber(19, 27)
+		local radius = rng:NextNumber(19, 26) -- sin salirse del último escalón (27.6)
 		local x, z = polar(radius, angle)
 		if not ChestPoints.isNearCandidate(x, z, 3.2) then
 			local size = Vector3.new(rng:NextNumber(0.8, 1.6), rng:NextNumber(0.5, 1), rng:NextNumber(0.8, 1.6))
@@ -169,16 +176,16 @@ local function buildSpawn(parent: Instance)
 			child:Destroy() -- el de la plantilla de Studio, que está en el centro
 		end
 	end
-	local spawn = Instance.new("SpawnLocation")
-	spawn.Name = "SpawnLocation"
-	spawn.Size = Vector3.new(8, 1, 8)
-	spawn.Position = SPAWN_POSITION
-	spawn.Anchored = true
-	spawn.Neutral = true
-	spawn.Duration = 0
-	spawn.Color = Palette.StoneDark
-	spawn.Material = Enum.Material.Slate
-	spawn.Parent = parent
+	local spawnPad = Instance.new("SpawnLocation")
+	spawnPad.Name = "SpawnLocation"
+	spawnPad.Size = Vector3.new(8, 1, 8)
+	spawnPad.Position = SPAWN_POSITION
+	spawnPad.Anchored = true
+	spawnPad.Neutral = true
+	spawnPad.Duration = 0
+	spawnPad.Color = Palette.StoneDark
+	spawnPad.Material = Enum.Material.Slate
+	spawnPad.Parent = parent
 end
 
 -- Construye toda la escena y devuelve la carpeta que la contiene

@@ -21,11 +21,9 @@ local function paintTerrain(terrain: Terrain)
 	local grass = Palette.Moss:Lerp(Color3.new(0, 0, 0), 0.15)
 	local rock = Palette.Stone:Lerp(Palette.StoneDark, 0.35)
 	local slate = Palette.StoneDark:Lerp(Palette.Stone, 0.2)
-	pcall(function()
-		terrain:SetMaterialColor(Enum.Material.Grass, grass)
-		terrain:SetMaterialColor(Enum.Material.Rock, rock)
-		terrain:SetMaterialColor(Enum.Material.Slate, slate)
-	end)
+	terrain:SetMaterialColor(Enum.Material.Grass, grass)
+	terrain:SetMaterialColor(Enum.Material.Rock, rock)
+	terrain:SetMaterialColor(Enum.Material.Slate, slate)
 end
 
 -- Cada montaña son tres bultos de roca: el cuerpo, una cima y un hombro al costado.
@@ -37,7 +35,7 @@ local function buildMountains(terrain: Terrain, rng: Random)
 		local cx, cz = MapParts.polar(ring, angle)
 
 		-- Cuerpo
-		local bodyRadius = rng:NextNumber(46, 60)
+		local bodyRadius = rng:NextNumber(52, 62) -- grandes, para que ningún par de vecinos deje hueco
 		local bodyY = bodyRadius * 0.15
 		terrain:FillBall(Vector3.new(cx, bodyY, cz), bodyRadius, Enum.Material.Rock)
 
@@ -63,6 +61,7 @@ local function buildMounds(terrain: Terrain, rng: Random)
 			continue
 		end
 		terrain:FillBall(Vector3.new(spot.X, -radius * 0.72, spot.Z), radius, Enum.Material.Grass)
+		WorldLayout.reserve(spot.X, spot.Z, radius * 0.7)
 		if rng:NextNumber() < 0.3 then
 			terrain:FillBall(Vector3.new(spot.X, -radius * 0.07, spot.Z), radius * 0.45, Enum.Material.Rock)
 		end
@@ -83,6 +82,7 @@ local function buildRidges(terrain: Terrain, rng: Random)
 			local radius = rng:NextNumber(14, 20)
 			local center = spot + along * (link * 20)
 			terrain:FillBall(Vector3.new(center.X, -radius * 0.5, center.Z), radius, material)
+			WorldLayout.reserve(center.X, center.Z, radius)
 		end
 	end
 end
@@ -97,6 +97,7 @@ local function buildMesas(terrain: Terrain, rng: Random)
 		end
 		terrain:FillCylinder(CFrame.new(spot.X, 4, spot.Z), 14, radius, Enum.Material.Rock)
 		terrain:FillCylinder(CFrame.new(spot.X, 11.5, spot.Z), 2, radius * 0.95, Enum.Material.Grass)
+		WorldLayout.reserve(spot.X, spot.Z, radius)
 	end
 end
 
@@ -109,6 +110,7 @@ local function buildBoulders(terrain: Terrain, rng: Random)
 			continue
 		end
 		terrain:FillBall(Vector3.new(spot.X, radius * 0.35, spot.Z), radius, Enum.Material.Rock)
+		WorldLayout.reserve(spot.X, spot.Z, radius * 1.6) -- incluye la roca pequeña de al lado
 		if rng:NextNumber() < 0.4 then
 			local small = radius * 0.55
 			terrain:FillBall(Vector3.new(spot.X + radius * 0.9, small * 0.3, spot.Z + radius * 0.4), small, Enum.Material.Rock)
@@ -140,6 +142,7 @@ end
 function WorldTerrain.build(parent: Instance, rng: Random)
 	local terrain = workspace.Terrain
 	terrain:Clear()
+	WorldLayout.clearReserved()
 	paintTerrain(terrain)
 	buildGround(parent)
 	buildMountains(terrain, rng)

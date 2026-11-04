@@ -82,14 +82,18 @@ function AmbientEffects.start()
 	anchor.Transparency = 1
 	newFireflies(anchor, settings.fireflyRate)
 	newDust(anchor, settings.dustRate)
-	anchor.Parent = workspace -- creado en el cliente: el servidor y los demás jugadores no lo reciben
 
+	-- Esta conexión vive lo mismo que el script del cliente (toda la sesión), por eso no se
+	-- desconecta. La pieza se crea en el cliente: el servidor y los demás jugadores no la reciben.
 	local localPlayer = Players.LocalPlayer
 	RunService.Heartbeat:Connect(function()
 		local character = localPlayer.Character
 		local root = character and character:FindFirstChild("HumanoidRootPart")
 		if root ~= nil and root:IsA("BasePart") then
 			anchor.CFrame = CFrame.new(root.Position + Vector3.new(0, FOLLOW_HEIGHT, 0))
+			if anchor.Parent == nil then
+				anchor.Parent = workspace -- recién ahora, para no emitir en el origen sin personaje
+			end
 		end
 	end)
 end

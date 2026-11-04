@@ -19,6 +19,26 @@ WorldLayout.RuinSpots = {
 	{ x = -120, z = 90, radius = 18 },
 }
 
+-- Círculos fijos que tampoco deben pisarse: los dos arcos de la plaza (z = 38 y z = -38)
+local FIXED_SPOTS = {
+	{ x = 0, z = 38, radius = 9 },
+	{ x = 0, z = -38, radius = 9 },
+}
+
+-- Bultos de terreno ya colocados (lomas, cordilleras, mesetas, rocas). WorldTerrain los
+-- anota aquí para que los árboles y muros no queden enterrados dentro de ellos.
+local reserved: { { x: number, z: number, radius: number } } = {}
+
+-- Vacía la lista de bultos reservados (al reconstruir el mapa)
+function WorldLayout.clearReserved()
+	table.clear(reserved)
+end
+
+-- Anota un bulto de terreno de "radius" studs centrado en (x, z)
+function WorldLayout.reserve(x: number, z: number, radius: number)
+	table.insert(reserved, { x = x, z = z, radius = radius })
+end
+
 -- Posición lateral del centro del camino a la altura z (el camino va hacia +z)
 function WorldLayout.pathX(z: number): number
 	local travelled = math.max(0, z - PATH_STRAIGHT_UNTIL)
@@ -43,11 +63,13 @@ function WorldLayout.isFree(x: number, z: number, radius: number, margin: number
 	if WorldLayout.distanceToPath(x, z) < WorldLayout.PathWidth / 2 + gap then
 		return false
 	end
-	for _, spot in WorldLayout.RuinSpots do
-		local dx = x - spot.x
-		local dz = z - spot.z
-		if math.sqrt(dx * dx + dz * dz) < spot.radius + gap then
-			return false
+	for _, list in { WorldLayout.RuinSpots, FIXED_SPOTS, reserved } do
+		for _, spot in list do
+			local dx = x - spot.x
+			local dz = z - spot.z
+			if math.sqrt(dx * dx + dz * dz) < spot.radius + gap then
+				return false
+			end
 		end
 	end
 	return true
