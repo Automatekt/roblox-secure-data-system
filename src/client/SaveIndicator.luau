@@ -1,7 +1,8 @@
 --!strict
 -- Ícono de "progreso guardado" en la esquina superior derecha. El servidor sube un
 -- contador en el PlayerGui del jugador cada vez que termina de guardar; aquí solo se
--- anima: aparece un disquete con un anillo que gira y al final una palomita.
+-- anima: aparece un disquete con un anillo que gira, luego una palomita, y se encoge
+-- hasta desaparecer. Antes del primer guardado no se ve nada.
 -- Es solo visual: no tiene botones ni envía nada.
 
 local Players = game:GetService("Players")
@@ -15,7 +16,7 @@ local SIZE = 44
 local FLOPPY = 20
 local SPIN_SECONDS = 0.9
 local HOLD_SECONDS = 1.3
-local FADE_SECONDS = 0.4
+local SHRINK_SECONDS = 0.25
 local DONE_COLOR = Palette.Moss:Lerp(Palette.Parchment, 0.45)
 
 local SaveIndicator = {}
@@ -79,14 +80,15 @@ function SaveIndicator.start()
 	-- Dentro de la zona segura: no choca con la barra superior de Roblox ni con el notch
 	gui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
 
-	local badge = Instance.new("CanvasGroup")
+	-- Un Frame normal que se muestra y se oculta con Visible: no depende de transparencias
+	local badge = Instance.new("Frame")
 	badge.Name = "Badge"
 	badge.AnchorPoint = Vector2.new(1, 0)
 	badge.Position = UDim2.new(1, -12, 0, 12)
 	badge.Size = UDim2.fromOffset(SIZE, SIZE)
 	badge.BackgroundColor3 = Palette.Ink
 	badge.BackgroundTransparency = 0.15
-	badge.GroupTransparency = 1
+	badge.Visible = false -- no se ve hasta que el servidor guarda
 	badge.Active = false -- solo informa: no bloquea toques ni clics
 	badge.Parent = gui
 
@@ -137,8 +139,8 @@ function SaveIndicator.start()
 		ring.Visible = true
 		check.Visible = false
 		arc.Rotation = 0
-		scale.Scale = 0.6
-		TweenService:Create(badge, TweenInfo.new(0.25), { GroupTransparency = 0 }):Play()
+		scale.Scale = 0.2
+		badge.Visible = true
 		TweenService:Create(scale, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), { Scale = 1 }):Play()
 		TweenService:Create(arc, TweenInfo.new(SPIN_SECONDS, Enum.EasingStyle.Linear), { Rotation = 360 }):Play()
 
@@ -146,7 +148,7 @@ function SaveIndicator.start()
 			if token ~= mine then
 				return
 			end
-			-- Terminó: sale la palomita con un pequeño rebote y luego todo se desvanece
+			-- Terminó: sale la palomita con un pequeño rebote y luego todo se encoge y se oculta
 			floppy.Visible = false
 			ring.Visible = false
 			check.Visible = true
@@ -157,7 +159,13 @@ function SaveIndicator.start()
 				if token ~= mine then
 					return
 				end
-				TweenService:Create(badge, TweenInfo.new(FADE_SECONDS), { GroupTransparency = 1 }):Play()
+				local shrink = TweenService:Create(scale, TweenInfo.new(SHRINK_SECONDS, Enum.EasingStyle.Back, Enum.EasingDirection.In), { Scale = 0.01 })
+				shrink.Completed:Once(function()
+					if token == mine then -- si llegó otro guardado mientras tanto, no se oculta
+						badge.Visible = false
+					end
+				end)
+				shrink:Play()
 			end)
 		end)
 	end
