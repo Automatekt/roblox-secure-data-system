@@ -11,11 +11,11 @@ local UserInputService = game:GetService("UserInputService")
 local Palette = require(ReplicatedStorage.Shared.Palette)
 
 local SOFT_TEXTURE = "rbxasset://textures/particles/smoke_main.dds" -- textura oficial de Roblox
-local FOLLOW_HEIGHT = 6 -- la nube de partículas está centrada a esta altura sobre el jugador
+local FOLLOW_HEIGHT = 3 -- la nube de partículas está centrada a esta altura sobre el jugador
 
 -- Versión completa y versión ligera para celulares y tabletas
-local FULL = { area = Vector3.new(64, 14, 64), fireflyRate = 4, dustRate = 7 }
-local LIGHT = { area = Vector3.new(44, 12, 44), fireflyRate = 2, dustRate = 3 }
+local FULL = { area = Vector3.new(64, 9, 64), fireflyRate = 5, dustRate = 7 }
+local LIGHT = { area = Vector3.new(44, 8, 44), fireflyRate = 3, dustRate = 3 }
 
 local AmbientEffects = {}
 
@@ -25,21 +25,21 @@ local function newFireflies(anchor: Part, rate: number)
 	emitter.Texture = SOFT_TEXTURE
 	emitter.Shape = Enum.ParticleEmitterShape.Box
 	emitter.ShapeStyle = Enum.ParticleEmitterShapeStyle.Volume
-	emitter.Color = ColorSequence.new(Palette.Gold:Lerp(Palette.Moss, 0.45))
+	emitter.Color = ColorSequence.new(Palette.Gold:Lerp(Palette.Moss, 0.25))
 	emitter.LightEmission = 1
 	emitter.Lifetime = NumberRange.new(6, 9)
 	emitter.Rate = rate
 	emitter.Speed = NumberRange.new(0.3, 0.9)
 	emitter.SpreadAngle = Vector2.new(180, 180)
 	emitter.Drag = 0.6
-	emitter.Size = NumberSequence.new(0.35)
+	emitter.Size = NumberSequence.new(0.9)
 	-- Aparecen, se apagan y se encienden suave, y se van: parpadeo lento
 	emitter.Transparency = NumberSequence.new({
 		NumberSequenceKeypoint.new(0, 1),
-		NumberSequenceKeypoint.new(0.15, 0.2),
-		NumberSequenceKeypoint.new(0.4, 0.85),
-		NumberSequenceKeypoint.new(0.62, 0.15),
-		NumberSequenceKeypoint.new(0.85, 0.8),
+		NumberSequenceKeypoint.new(0.15, 0.05),
+		NumberSequenceKeypoint.new(0.4, 0.7),
+		NumberSequenceKeypoint.new(0.62, 0.05),
+		NumberSequenceKeypoint.new(0.85, 0.7),
 		NumberSequenceKeypoint.new(1, 1),
 	})
 	emitter.Parent = anchor

@@ -18,9 +18,9 @@ local WorldTerrain = {}
 
 -- Colores del terreno: todos salen de la paleta
 local function paintTerrain(terrain: Terrain)
-	local grass = Palette.Moss:Lerp(Color3.new(0, 0, 0), 0.15)
-	local rock = Palette.Stone:Lerp(Palette.StoneDark, 0.35)
-	local slate = Palette.StoneDark:Lerp(Palette.Stone, 0.2)
+	local grass = Palette.Moss:Lerp(Palette.Gold, 0.12)
+	local rock = Palette.Stone
+	local slate = Palette.StoneDark:Lerp(Palette.Stone, 0.55)
 	terrain:SetMaterialColor(Enum.Material.Grass, grass)
 	terrain:SetMaterialColor(Enum.Material.Rock, rock)
 	terrain:SetMaterialColor(Enum.Material.Slate, slate)
@@ -124,7 +124,7 @@ local function buildGround(parent: Instance)
 	if template then
 		template:Destroy()
 	end
-	local color = Palette.Moss:Lerp(Color3.new(0, 0, 0), 0.15)
+	local color = Palette.Moss:Lerp(Palette.Gold, 0.12) -- el mismo verde que la hierba del terreno
 	-- Cilindro tumbado en vertical: 20 de grosor, con la cara de arriba en y = 0
 	local ground = MapParts.newPart(
 		parent,

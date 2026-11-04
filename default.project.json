@@ -31,11 +31,11 @@
           0.3098
         ],
         "OutdoorAmbient": [
-          0.6588,
-          0.5294,
-          0.4392
+          0.7451,
+          0.6039,
+          0.502
         ],
-        "Brightness": 2.3,
+        "Brightness": 2.6,
         "ExposureCompensation": 0.25,
         "ClockTime": 17.75,
         "ColorShift_Top": [
@@ -51,7 +51,7 @@
       "Atmosphere": {
         "$className": "Atmosphere",
         "$properties": {
-          "Density": 0.38,
+          "Density": 0.3,
           "Offset": 0.2,
           "Color": [
             1.0,
@@ -64,7 +64,7 @@
             0.4118
           ],
           "Glare": 0.5,
-          "Haze": 2.6
+          "Haze": 2.2
         }
       },
       "ColorCorrection": {
