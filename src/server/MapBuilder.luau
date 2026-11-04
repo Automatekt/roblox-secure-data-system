@@ -185,6 +185,14 @@ local function buildSpawn(parent: Instance)
 	spawnPad.Duration = 0
 	spawnPad.Color = Palette.StoneDark
 	spawnPad.Material = Enum.Material.Slate
+	-- Invisible: los jugadores aparecen sobre el camino, no sobre un bloque. También se quita
+	-- la calcomanía que Roblox le pone por defecto (la que daba el aviso del Decal 203785492).
+	spawnPad.Transparency = 1
+	for _, child in spawnPad:GetChildren() do
+		if child:IsA("Decal") then
+			child:Destroy()
+		end
+	end
 	spawnPad.Parent = parent
 end
 

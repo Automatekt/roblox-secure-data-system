@@ -116,10 +116,12 @@ Presupuesto del mapa: unas 210 piezas ancladas, 8 luces sin sombras (antorchas) 
 - Un jugador con el flujo real de cofres (versión anterior a la pasada 7): los 14 puntos son válidos y alcanzables a pie, los cofres sucesivos quedan a 19 a 36 studs, y se comprobaron el cooldown, el monedero lleno, la poción al máximo, el intento desde lejos y el intento de otro jugador.
 - Animaciones del cofre medidas: la aparición llega a 3.3 y se asienta en 3.0 con rebote, y la desaparición hincha, sube y encoge.
 - Los dos sonidos cargan y suenan a tiempo en Studio.
+- **Pasada visual 7, vista en Play:** el anillo de montañas esconde el borde del mundo, el camino sale del arco de entrada, hay lomas, rocas, árboles y muros, las luciérnagas y el polvo aparecen, y la Salida no muestra errores nuevos.
+- **3 jugadores con el cofre por jugador:** cada uno ve su propio cofre, su saldo y sus objetos, sin ver los de los demás.
+- **Emulador de celular (Samsung Galaxy A16):** el panel no tapa el cofre ni al personaje.
 
 **Sin probar todavía:**
-- **Pasada visual 7 completa** (montañas, relieve, camino, árboles, ruinas lejanas, más luz, luciérnagas y polvo): se escribió sin ver Studio. Falta mirar cada parte en Play y ajustar.
-- Cofre por jugador con 3 jugadores y en el emulador de celular tras los últimos arreglos.
+- Rendimiento real de la pasada 7 (conteo de piezas y partículas medido en Studio) y su comportamiento en una tableta.
 - Guardado real entre sesiones: los datos de prueba se borran al detener Studio. Necesita el lugar publicado.
 - Expulsión por fallo de carga de datos.
 - Choque entre dos servidores que quieren el mismo jugador.
