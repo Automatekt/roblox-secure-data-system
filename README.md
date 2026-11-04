@@ -122,12 +122,12 @@ Presupuesto del mapa: unas 210 piezas ancladas, 8 luces sin sombras (antorchas) 
 - **Emulador de celular (Samsung Galaxy A16):** el panel no tapa el cofre ni al personaje.
 - **Guardado real entre sesiones** (lugar publicado y privado, con el acceso de Studio a los servicios de API activado): se recogieron 3 cofres (300 monedas y 3 pociones), se detuvo la prueba, se volvió a entrar y el saldo y el inventario seguían. Se probó con un solo jugador desde Studio, no en un servidor publicado.
 - **Ícono de progreso guardado** (esquina superior derecha): oculto hasta el primer guardado, luego anillo girando, palomita y se oculta. Se vio bien en PC y en el emulador de celular.
+- **Celular real:** el usuario jugó en un celular de verdad y fue bien. También se comprobó que el progreso se guarda al salir del juego.
 - **Emulador de tableta y de consola:** la interfaz se ve y funciona bien (probado por el usuario).
 
 **Sin probar todavía:**
 - Rendimiento real de la pasada 7 (conteo de piezas y partículas medido en Studio).
 - Expulsión por fallo de carga de datos.
-- Un celular real (las pruebas de tableta y consola se hicieron con los emuladores de Studio).
 
 ## Límites conocidos
 
