@@ -39,7 +39,7 @@ Solo se usan audios de la biblioteca de efectos licenciada de **Pro Sound Effect
 | Aparece el cofre | `9116162487` | Key Dings Metal Clinking 3 (SFX) | 2.03 s | 0.35 |
 | Se recoge el cofre | `9113728042` | Cash Register 1 (SFX) | 2.11 s | 0.55 |
 
-En Studio se comprobó que ambos cargan y suenan a tiempo. **No se pudo verificar que suenen en un lugar publicado.** Hay que revisarlo tras publicar.
+En Studio se comprobó que ambos cargan y suenan a tiempo, y en el lugar publicado (entrando desde el cliente de Roblox) se oyen los dos.
 
 ## Archivos y para qué sirve cada uno
 
@@ -115,7 +115,8 @@ Presupuesto del mapa: unas 210 piezas ancladas, 8 luces sin sombras (antorchas) 
 - 2 y 3 jugadores con la primera versión del cofre: cada uno ve solo sus datos, también tras reaparecer. Un cliente que se pone monedas en su equipo no cambia nada en el servidor.
 - Un jugador con el flujo real de cofres (versión anterior a la pasada 7): los 14 puntos son válidos y alcanzables a pie, los cofres sucesivos quedan a 19 a 36 studs, y se comprobaron el cooldown, el monedero lleno, la poción al máximo, el intento desde lejos y el intento de otro jugador.
 - Animaciones del cofre medidas: la aparición llega a 3.3 y se asienta en 3.0 con rebote, y la desaparición hincha, sube y encoge.
-- Los dos sonidos cargan y suenan a tiempo en Studio.
+- Los dos sonidos cargan y suenan a tiempo en Studio, y se oyen en el lugar publicado.
+- **Choque entre dos servidores**, con el guardado cada 60 segundos: con Studio en Play y un cofre recogido y guardado (lo confirmó el ícono de guardado), se entró al juego publicado con la misma cuenta. El servidor publicado esperó y cargó lo último guardado (sin perder el cofre), y Studio expulsó al jugador con el mensaje de sesión terminada.
 - **Pasada visual 7, vista en Play:** el anillo de montañas esconde el borde del mundo, el camino sale del arco de entrada, hay lomas, rocas, árboles y muros, las luciérnagas y el polvo aparecen, y la Salida no muestra errores nuevos.
 - **3 jugadores con el cofre por jugador:** cada uno ve su propio cofre, su saldo y sus objetos, sin ver los de los demás.
 - **Emulador de celular (Samsung Galaxy A16):** el panel no tapa el cofre ni al personaje.
@@ -126,8 +127,6 @@ Presupuesto del mapa: unas 210 piezas ancladas, 8 luces sin sombras (antorchas) 
 **Sin probar todavía:**
 - Rendimiento real de la pasada 7 (conteo de piezas y partículas medido en Studio) y su comportamiento en una tableta.
 - Expulsión por fallo de carga de datos.
-- Choque entre dos servidores que quieren el mismo jugador.
-- Los sonidos en un lugar publicado.
 - Un celular real (las pruebas de tableta y consola se hicieron con los emuladores de Studio).
 
 ## Límites conocidos
