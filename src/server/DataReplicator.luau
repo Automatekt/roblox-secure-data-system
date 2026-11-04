@@ -53,9 +53,20 @@ local function syncAll(player: Player)
 	playerGui:SetAttribute(DataAttributes.Loaded, true)
 end
 
+-- Cuenta los guardados en el PlayerGui del dueño; su cliente anima un ícono al subir
+local function markSaved(player: Player)
+	local playerGui = getPlayerGui(player)
+	if playerGui == nil then
+		return -- el último guardado al salir llega cuando el jugador ya no está
+	end
+	local count = playerGui:GetAttribute(DataAttributes.SaveCount)
+	playerGui:SetAttribute(DataAttributes.SaveCount, (if type(count) == "number" then count else 0) + 1)
+end
+
 -- Debe llamarse antes de DataService.start() para no perder ningún jugador
 function DataReplicator.start()
 	DataService.onLoaded(syncAll)
+	DataService.onSaved(markSaved)
 end
 
 return DataReplicator

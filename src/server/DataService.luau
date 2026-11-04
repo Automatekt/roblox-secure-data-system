@@ -22,12 +22,18 @@ local store = ProfileStore.New(STORE_NAME, DataTemplate)
 local profiles: { [Player]: ProfileStore.Profile<DataTemplate.PlayerData> } = {}
 
 local loadedCallbacks: { (Player) -> () } = {}
+local savedCallbacks: { (Player) -> () } = {}
 
 local DataService = {}
 
 -- Avisa cuando los datos de un jugador terminan de cargar
 function DataService.onLoaded(callback: (Player) -> ())
 	table.insert(loadedCallbacks, callback)
+end
+
+-- Avisa cada vez que los datos de un jugador se guardan con éxito en el DataStore
+function DataService.onSaved(callback: (Player) -> ())
+	table.insert(savedCallbacks, callback)
 end
 
 -- Devuelve los datos del jugador, o nil si todavía no cargaron o ya salió.
@@ -74,6 +80,12 @@ local function loadPlayer(player: Player)
 		profiles[player] = nil
 		if player.Parent == Players then
 			player:Kick(KICK_SESSION_ENDED)
+		end
+	end)
+
+	profile.OnAfterSave:Connect(function()
+		for _, callback in savedCallbacks do
+			task.spawn(callback, player)
 		end
 	end)
 

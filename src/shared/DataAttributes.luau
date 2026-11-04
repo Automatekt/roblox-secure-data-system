@@ -8,6 +8,7 @@ return {
 	Loaded = "DataLoaded", -- true cuando los datos del jugador ya cargaron
 	Coins = "Coins",
 	Notice = "Notice", -- último aviso para el jugador (ver Notifier)
+	SaveCount = "SaveCount", -- sube 1 cada vez que el servidor termina de guardar a este jugador
 	itemKey = function(itemId: string): string
 		return "Item_" .. itemId
 	end,

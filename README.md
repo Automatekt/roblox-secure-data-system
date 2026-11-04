@@ -11,6 +11,7 @@ Pieza de portafolio. Guarda las monedas y el inventario de cada jugador sin perd
 
 - Al entrar un jugador se cargan sus datos y quedan bloqueados para que ningún otro servidor los use a la vez.
 - Al salir (o al cerrar el servidor) se guardan y se liberan.
+- Cada vez que el servidor termina de guardar (cada 60 segundos), aparece un pequeño ícono de disquete en la esquina superior derecha de la pantalla de ese jugador, con un anillo que gira y una palomita al terminar.
 - Si los datos no se pueden cargar, el jugador es expulsado con un mensaje claro. Nunca juega con datos vacíos que pisarían su guardado real.
 - Las monedas y el inventario solo se cambian con funciones del servidor que validan todo.
 - Cada jugador ve su propio panel con monedas e inventario. Los demás no pueden ver esos datos.
@@ -49,7 +50,7 @@ En Studio se comprobó que ambos cargan y suenan a tiempo. **No se pudo verifica
 - `CurrencyService.luau`: sumar y gastar monedas. Rechaza negativos, texto, NaN, infinito y decimales, no deja gastar más de lo que hay, y tiene un tope de 1.000.000.000 (si una suma lo pasaría, no cambia nada y devuelve `OverCap`).
 - `InventoryService.luau`: añadir y quitar objetos. Solo acepta objetos del catálogo, cantidades válidas y respeta el máximo de cada objeto.
 - `Validation.luau`: la comprobación de cantidades que usan las monedas y el inventario.
-- `DataReplicator.luau`: copia los datos al `PlayerGui` del dueño.
+- `DataReplicator.luau`: copia los datos al `PlayerGui` del dueño y cuenta los guardados para el ícono.
 - `Notifier.luau`: envía los avisos (recompensa, cooldown, monedero lleno) al `PlayerGui` del dueño.
 - `ChestService.luau`: un cofre por jugador, valida todo al recogerlo y crea el siguiente.
 - `ChestBuilder.luau`: crea la caja invisible del cofre con su botón de recoger.
@@ -71,6 +72,7 @@ En Studio se comprobó que ambos cargan y suenan a tiempo. **No se pudo verifica
 **Cliente** (`src/client`)
 - `init.client.luau`: punto de entrada del cliente.
 - `HudController.luau`: el panel de monedas e inventario, con el contador animado y el "+100" flotante. Solo lee, no tiene botones.
+- `SaveIndicator.luau`: el ícono de "progreso guardado" de la esquina. Solo anima; el servidor sube un contador en el `PlayerGui` del dueño cada vez que termina de guardar.
 - `HudIcons.luau`: los íconos del panel, dibujados con elementos de interfaz.
 - `Toasts.luau`: los avisos de recompensa, espera y monedero lleno.
 - `ChestVisual.luau`: dibuja el cofre dorado (14 piezas) en el equipo de su dueño.
